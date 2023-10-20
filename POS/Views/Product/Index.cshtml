@@ -1,0 +1,49 @@
+@{
+    ViewBag.Title = "Products";
+    Layout = "_Layout";
+}
+
+<h1>@ViewBag.Title</h1>
+
+@if (!string.IsNullOrEmpty(ViewBag.Error))
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+
+<div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Code</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th style="width: 12%">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Code</td>
+                <td>@product.Description</td>
+                <td>@product.Price</td>
+                <td>@product.Stock</td>
+                <td>
+                    <a asp-action="Edit" asp-controller="Product" asp-route-id="@product.Id" class="btn btn-outline-primary">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+                    <form asp-action="Delete" asp-controller="Product" asp-route-id="@product.Id" method="post" class="d-inline">
+                        <input type="hidden" name="__RequestVerificationToken" value="@Html.AntiForgeryToken()" />
+                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('¿Está seguro que desea eliminar este registro?');">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

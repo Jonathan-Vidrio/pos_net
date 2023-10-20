@@ -1,0 +1,33 @@
+﻿@model POS.Models.SaleModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+<div>
+    <h4 class="mt-5">Carrito de Compras</h4>
+    <table class="table" id="cartTable">
+        <thead>
+        <tr>
+            <th>Código</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Los productos agregados se mostrarán aquí -->
+        </tbody>
+    </table>
+
+    <!-- Total de la venta -->
+    <div class="d-flex justify-content-between align-items-center">
+        <h5>Total de la Venta: <span id="cartTotal">$0.00</span></h5>
+        <button type="button" class="btn btn-success" id="completeSale">Completar Venta</button>
+    </div>
+</div>
+
+<footer>
+    
+</footer>

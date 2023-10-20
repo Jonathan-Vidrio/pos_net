@@ -1,0 +1,46 @@
+@model POS.Models.ProductModel;
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>@ViewData["Tittle"]</h1>
+<h4>Product</h4>
+<hr />
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label asp-for="Code"></label>
+                    <input asp-for="Code" class="form-control"/>
+                    <span asp-validation-for="Code" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Description"></label>
+                    <input asp-for="Description" class="form-control"/>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Price"></label>
+                    <input asp-for="Price" class="form-control"/>
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Stock"></label>
+                    <input asp-for="Stock" class="form-control"/>
+                    <span asp-validation-for="Stock" class="text-danger"></span>
+                </div>
+                <div class="mt-4">
+                    <input type="submit" value="Save" class="btn btn-primary"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
