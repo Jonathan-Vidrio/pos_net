@@ -5,8 +5,8 @@ namespace POS.Models;
 
 public class SaleDetailModel
 {
-    [BsonElement("product")]
-    public ObjectId ProductId { get; set; }
+    [BsonElement("code")]
+    public string Code { get; set; }
     
     [BsonElement("quantity")]
     public int Quantity { get; set; }

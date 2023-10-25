@@ -3,31 +3,158 @@
 @{
     ViewData["Title"] = "Create";
 }
-<div>
-    <h4 class="mt-5">Carrito de Compras</h4>
-    <table class="table" id="cartTable">
-        <thead>
-        <tr>
-            <th>Código</th>
-            <th>Descripción</th>
-            <th>Precio</th>
-            <th>Cantidad</th>
-            <th>Subtotal</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Los productos agregados se mostrarán aquí -->
-        </tbody>
-    </table>
 
-    <!-- Total de la venta -->
-    <div class="d-flex justify-content-between align-items-center">
-        <h5>Total de la Venta: <span id="cartTotal">$0.00</span></h5>
-        <button type="button" class="btn btn-success" id="completeSale">Completar Venta</button>
+<!-- Título de la página -->
+<header class="text-center mb-5">
+    <h4 class="display-4">Nueva Venta</h4>
+</header>
+
+<!-- Sección principal -->
+<div class="container mt-5">
+    <!-- Formulario para agregar productos a la venta -->
+    <form id="detailsForm" class="mb-4">
+        <div class="row">
+            <!-- Campo para el código del producto -->
+            <div class="col-md-7">
+                <label for="productCode" class="form-label">Código del Producto:</label>
+                <input type="text" class="form-control" id="productCode" placeholder="Ingrese el código del producto">
+            </div>
+            <!-- Botón para agregar el producto por código -->
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="button" class="btn btn-primary w-100" id="addProduct">Agregar Producto</button>
+            </div>
+            <!-- Botón para abrir el modal de búsqueda de productos -->
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="button" class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#productsModal">
+                    Buscar Producto
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Sección que muestra los productos agregados a la venta -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="text-center">Productos</h4>
+        </div>
+        <table class="table mb-0">
+            <thead>
+            <tr>
+                <th>Código</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="cartBody">
+                <!-- Espacio donde se mostrarán los productos agregados -->
+            </tbody>
+        </table>
+        <!-- Pie de la sección que muestra el total y el botón para completar la venta -->
+        <div class="card-footer d-flex justify-content-between">
+            <h5>Total: <span id="cartTotal">$0.00</span></h5>
+            <button type="button" class="btn btn-success" id="completeSale">Completar Venta</button>
+        </div>
     </div>
 </div>
 
-<footer>
-    
-</footer>
+<!-- Modal para cambiar la cantidad de un producto en el carrito -->
+<div class="modal fade" id="quantityModal" tabindex="-1" aria-labelledby="quantityModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quantityModalLabel">Cambiar Cantidad</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Campo para introducir la nueva cantidad -->
+                <div class="mb-3">
+                    <label for="newQuantity" class="form-label">Cantidad:</label>
+                    <input type="number" class="form-control" id="newQuantity" placeholder="Ingrese la nueva cantidad">
+                </div>
+            </div>
+            <!-- Botones para guardar la nueva cantidad o cancelar la acción -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveQuantity">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal que se muestra al completar la venta -->
+<div class="modal fade" id="completionModal" tabindex="-1" aria-labelledby="completionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="completionModalLabel">Completar Venta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Campos para mostrar el total de la venta, la cantidad recibida y el cambio a devolver -->
+                <div class="mb-3">
+                    <label for="totalSale" class="form-label">Total de la Venta:</label>
+                    <input type="text" class="form-control" id="totalSale" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="amountReceived" class="form-label">Cantidad Recibida:</label>
+                    <input type="number" class="form-control" id="amountReceived" placeholder="Ingrese la cantidad recibida">
+                </div>
+                <div class="mb-3">
+                    <label for="changeAmount" class="form-label">Cambio:</label>
+                    <input type="text" class="form-control" id="changeAmount" readonly>
+                </div>
+            </div>
+            <!-- Botones para confirmar la venta o cerrar el modal -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-success" id="confirmSale">Confirmar Venta</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para buscar un producto -->
+<div class="modal fade" id="productsModal" tabindex="-1" aria-labelledby="productsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productsModalLabel">Buscar Productos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Input de búsqueda -->
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="productSearchInput" placeholder="Buscar producto...">
+                    <button class="btn btn-outline-secondary" type="button" id="searchProductButton">Buscar</button>
+                </div>
+                
+                <!-- Tabla de productos -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsList">
+                        <!-- Aquí se mostrarán los productos -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="js/newSale.js"></script>
+}
+
+
+

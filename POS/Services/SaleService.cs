@@ -8,21 +8,29 @@ namespace POS.Services;
 public class SaleService
 {
     private readonly IMongoCollection<SaleModel> _sales;
+    private readonly IMongoCollection<SaleCancellationModel> _cancelations;
     
     public SaleService(MongoClient mongoClient, IMongoDbSettings settings)
     {
         var database = mongoClient.GetDatabase(settings.Database);
         _sales = database.GetCollection<SaleModel>("sales");
+        _cancelations = database.GetCollection<SaleCancellationModel>("saleCancelations");
     }
     
-    public List<SaleModel> GetSales()
+    public List<SaleModel> GetAllSales()
     {
-        return _sales.Find(sale => true).ToList();
+        return _sales.Find(sale => sale.Status == true).ToList();
+    }
+    
+    public List<SaleModel> GetCanceledSales()
+    {
+        return _sales.Find(sale => sale.Status == false).ToList();
     }
 
     public SaleModel GetSale(string id)
     {
-        return _sales.Find(sale => sale.Id == ObjectId.Parse(id)).FirstOrDefault();
+        // el id no es un objectid es un string
+        return _sales.Find(sale => sale.Id == id).FirstOrDefault();
     }
     
     public SaleModel CreateSale(SaleModel sale)
@@ -33,11 +41,26 @@ public class SaleService
     
     public void UpdateSale(string id, SaleModel sale)
     {
-        _sales.ReplaceOne(sale => sale.Id == ObjectId.Parse(id), sale);
+        _sales.ReplaceOne(sale => sale.Id == id, sale);
+    }
+
+    public void CancelSale(string id)
+    {
+        var sale = _sales.Find(sale => sale.Id == id).FirstOrDefault();
+        sale.Status = false;
+        _sales.ReplaceOne(sale => sale.Id == id, sale);
+        
+        var cancelation = new SaleCancellationModel
+        {
+            SaleId = ObjectId.Parse(id),
+            DateCancelled = DateTime.Now,
+            SupervisorId = ObjectId.Parse("5f9b3b6b5f9b3b6b5f9b3b6b")
+        };
+        _cancelations.InsertOne(cancelation);
     }
     
     public void DeleteSale(string id)
     {
-        _sales.DeleteOne(sale => sale.Id == ObjectId.Parse(id));
+        _sales.DeleteOne(sale => sale.Id == id);
     }
 }

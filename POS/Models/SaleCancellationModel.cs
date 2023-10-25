@@ -16,7 +16,4 @@ public class SaleCancellationModel
     
     [BsonElement("supervisorId")]
     public ObjectId SupervisorId { get; set; }
-    
-    [BsonElement("reason")]
-    public string Reason { get; set; }
 }

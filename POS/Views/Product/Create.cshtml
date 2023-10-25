@@ -4,39 +4,40 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>@ViewData["Tittle"]</h1>
-<h4>Product</h4>
-<hr />
+<header class="text-center mb-5">
+    <h4 class="display-4">Registrar Producto</h4>
+</header>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-5">
-            <form asp-action="Create" method="post">
-                <div class="mb-3">
-                    <label asp-for="Code"></label>
-                    <input asp-for="Code" class="form-control"/>
-                    <span asp-validation-for="Code" class="text-danger"></span>
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label asp-for="Code" class="form-label">Código</label>
+                <input asp-for="Code" class="form-control" placeholder="Ingresa el código del producto"/>
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Descripción</label>
+                <input asp-for="Description" class="form-control" placeholder="Descripción del producto"/>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label">Precio</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input asp-for="Price" class="form-control" placeholder="0.00" type="number"/>
                 </div>
-                <div class="mb-3">
-                    <label asp-for="Description"></label>
-                    <input asp-for="Description" class="form-control"/>
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Price"></label>
-                    <input asp-for="Price" class="form-control"/>
-                    <span asp-validation-for="Price" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Stock"></label>
-                    <input asp-for="Stock" class="form-control"/>
-                    <span asp-validation-for="Stock" class="text-danger"></span>
-                </div>
-                <div class="mt-4">
-                    <input type="submit" value="Save" class="btn btn-primary"/>
-                </div>
-            </form>
-        </div>
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Stock" class="form-label">Stock</label>
+                <input asp-for="Stock" class="form-control" placeholder="Cantidad en stock"/>
+                <span asp-validation-for="Stock" class="text-danger"></span>
+            </div>
+            <div class="mt-4 d-flex justify-content-center">
+                <input type="submit" value="Guardar" class="btn btn-primary"/>
+            </div>
+        </form>
     </div>
 </div>
 

@@ -42,10 +42,24 @@ public class ProductController : Controller
         return RedirectToAction(nameof(Index));
     }
     
+    [HttpGet("Product/GetAll")]
+    public IActionResult GetAll()
+    {
+        var products = _service.GetProducts();
+        return Json(products);
+    }
+    
     [HttpGet("Product/GetByCode/{code}")]
     public IActionResult GetByCode(string code)
     {
         var product = _service.GetProductByCode(code);
+        return Json(product);
+    }
+    
+    [HttpGet("Product/Search/{term}")]
+    public IActionResult Search(string term)
+    {
+        var product = _service.SearchProducts(term);
         return Json(product);
     }
 

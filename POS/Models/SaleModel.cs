@@ -5,21 +5,28 @@ namespace POS.Models;
 
 public class SaleModel
 {
-    [BsonId] 
-    public ObjectId Id { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
     
     [BsonElement("date")]
     public DateTime Date { get; set; }
     
+    [BsonElement("client")]
+    public string Client { get; set; }
+    
     [BsonElement("total")]
-    public decimal Total { get; set; }
+    public float Total { get; set; }
     
     [BsonElement("cashReceived")]
-    public decimal CashReceived { get; set; }
+    public float CashReceived { get; set; }
     
     [BsonElement("change")]
-    public decimal Change { get; set; }
+    public float Change { get; set; }
     
     [BsonElement("saleDetails")]
     public List<SaleDetailModel> SaleDetails { get; set; }
+    
+    [BsonElement("status")]
+    public Boolean Status { get; set; }
 }

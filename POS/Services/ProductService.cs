@@ -19,6 +19,15 @@ public class ProductService
     {
         return _products.Find(product => true).ToList();
     }
+    
+    public List<ProductModel> SearchProducts(string term)
+    {
+        var filter = Builders<ProductModel>.Filter.Or(
+            Builders<ProductModel>.Filter.Regex(p => p.Code, new BsonRegularExpression(term, "i")), 
+            Builders<ProductModel>.Filter.Regex(p => p.Description, new BsonRegularExpression(term, "i"))
+        );
+        return _products.Find(filter).ToList();
+    }
 
     public ProductModel GetProductById(string id)
     {

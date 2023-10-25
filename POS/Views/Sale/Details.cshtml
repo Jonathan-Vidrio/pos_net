@@ -1,6 +1,101 @@
+@model POS.Models.SaleModel
+
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
 
-<h2>title</h2>
+<!-- Mostrar información de la venta -->
+<header class="text-center mb-5">
+    <h4 class="display-4">Detalles de la Venta</h4>
+</header>
+
+<div class="row justify-content-center mt-5 mb-5">
+    <div class="col-md-5">
+        <form asp-action="CancelSale" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div class="mb-3">
+                <label asp-for="Date" class="form-label">Fecha de Venta</label>
+                <input asp-for="Date" class="form-control" readonly="readonly"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Client" class="form-label">Cliente</label>
+                <input asp-for="Client" class="form-control" readonly="readonly"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Total" class="form-label">Total</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input asp-for="Total" class="form-control" placeholder="0.00" type="number" readonly="readonly"/>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="CashReceived" class="form-label">Dinero Recibido</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input asp-for="CashReceived" class="form-control" placeholder="0.00" type="number" readonly="readonly"/>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Change" class="form-label">Cambio</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input asp-for="Change" class="form-control" placeholder="0.00" type="number" readonly="readonly"/>
+                </div>
+            </div>
+            <div class="mt-4 d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Cancelar Venta</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- mostrar los detalles de la venta -->
+<div class="card">
+    <div class="card-header">
+        <h4 class="text-center">Productos Vendidos</h4>
+    </div>
+    <table class="table mb-0">
+        <thead>
+        <tr>
+            <th>Código</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+        </tr>
+        </thead>
+        <tbody id="cartBody">
+        <!-- Espacio donde se mostrarán los productos agregados -->
+        </tbody>
+    </table>
+    <!-- Pie de la sección que muestra el total y el botón para completar la venta -->
+    <div class="card-footer d-flex justify-content-between">
+        <h5>Total: <span id="cartTotal">$0.00</span></h5>
+    </div>
+</div>
+
+
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirmar Cancelación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Ingresa el token del supervisor para confirmar la cancelación de la venta.</p>
+                <input type="password" class="form-control" id="supervisorToken" placeholder="Token del supervisor">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-danger" id="confirmCancel">Confirmar Cancelación</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/cancelSale.js"></script>
+}

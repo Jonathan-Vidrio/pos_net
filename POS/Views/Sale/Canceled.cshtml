@@ -1,9 +1,10 @@
-﻿@{
-    ViewData["Title"] = "Sales";
+@{
+    ViewBag.Title = "Canceled Sales";
+    Layout = "_Layout";
 }
 
 <header class="text-center mb-5">
-    <h4 class="display-4">Ventas</h4>
+    <h4 class="display-4">Ventas Canceladas</h4>
 </header>
 
 <div>
@@ -11,10 +12,8 @@
         <thead>
         <tr>
             <th>Fecha</th>
-            <th>Cliente</th>
-            <th>Total</th>
-            <th>Dinero Recibido</th>
-            <th>Cambio</th>
+            <th>Venta</th>
+            <th>Supervisor</th>
             <th style="width: 12%">Actions</th>
         </tr>
         </thead>
@@ -22,11 +21,9 @@
         @foreach (var sale in Model)
         {
             <tr>
-                <td>@sale.Date</td>
-                <td>@sale.Client</td>
-                <td>@sale.Total</td>
-                <td>@sale.CashReceived</td>
-                <td>@sale.Change</td>
+                <td>@sale.DateCancelled</td>
+                <td>@sale.SaleId</td>
+                <td>@sale.SupervisorId</td>
                 <td>
                     <!-- mostrar detalles -->
                     <a asp-action="Details" asp-controller="Sale" asp-route-id="@sale.Id" class="btn btn-primary m-1">

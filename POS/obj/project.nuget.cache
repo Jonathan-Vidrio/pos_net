@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "B25N5YakdosCpTfFKMZIOKx1kUuiR7C8Ua0bU82wqG4ZDU/Ti9T7rS333UM43MoxSaiO9kEZPD/vV+oKrMGt7g==",
+  "dgSpecHash": "6Chil1b59pAmx8FPbxxbUehdehZlbnYbxUAPrlxeYr1npm3o2sK3qNQWlNTlAoEel9b1l7qHsoq7VQdMeV29Yw==",
   "success": true,
-  "projectFilePath": "/home/semahr/RiderProjects/Actividad_Final_UD_II/POS/POS.csproj",
+  "projectFilePath": "/home/semahr/RiderProjects/pos_net/POS/POS.csproj",
   "expectedPackageFiles": [
     "/home/semahr/.nuget/packages/awssdk.core/3.7.100.14/awssdk.core.3.7.100.14.nupkg.sha512",
     "/home/semahr/.nuget/packages/awssdk.securitytoken/3.7.100.14/awssdk.securitytoken.3.7.100.14.nupkg.sha512",

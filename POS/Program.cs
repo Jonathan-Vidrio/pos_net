@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using POS.Config;
@@ -14,12 +15,18 @@ builder.Services.Configure<MongoDbSettings>(
 
 builder.Services.AddSingleton<ProductService>();
 builder.Services.AddSingleton<SaleService>();
+builder.Services.AddSingleton<SupervisorService>();
 
 builder.Services.AddSingleton<IMongoDbSettings>(sp =>
     sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
 
 builder.Services.AddSingleton<MongoClient>(
     sp => new MongoClient(sp.GetRequiredService<IMongoDbSettings>().ConnectionString));
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+});
 
 var app = builder.Build();
 

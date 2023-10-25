@@ -12,7 +12,7 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Sale" asp-action="Index">POS</a>
+            <a class="navbar-brand" asp-area="" asp-controller="Sale" asp-action="Create">Nueva Venta</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -21,21 +21,20 @@
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Sales
+                            Todas la Ventas
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" asp-area="" asp-controller="Sale" asp-action="Index">All Sales</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="Sale" asp-action="">Canceled Sales</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="Sale" asp-action="">New Sale</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Sale" asp-action="Index">Historial de Ventas</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Sale" asp-action="Canceled">Ventas Canceladas</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Products
+                            Productos
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="Index">All Products</a>
-                            <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="Create">Add Product</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="Index">Todos los Productos</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="Create">Regitrar Producto</a>
                         </div>
                     </li>
                 </ul>
@@ -51,7 +50,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2023 - POS - <a asp-area="" asp-controller="Sale" asp-action="">Privacy</a>
+        &copy; 2023 - POS - <a asp-area="" asp-controller="" asp-action="">Privacy</a>
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

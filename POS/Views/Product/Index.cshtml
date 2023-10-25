@@ -1,16 +1,18 @@
 @{
     ViewBag.Title = "Products";
     Layout = "_Layout";
+    
+    if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
 }
 
-<h1>@ViewBag.Title</h1>
-
-@if (!string.IsNullOrEmpty(ViewBag.Error))
-{
-    <div class="alert alert-danger">
-        @ViewBag.Error
-    </div>
-}
+<header class="text-center mb-5">
+    <h4 class="display-4">Productos</h4>
+</header>
 
 <div>
     <table class="table table-hover">
@@ -32,12 +34,12 @@
                 <td>@product.Price</td>
                 <td>@product.Stock</td>
                 <td>
-                    <a asp-action="Edit" asp-controller="Product" asp-route-id="@product.Id" class="btn btn-outline-primary">
+                    <a asp-action="Edit" asp-controller="Product" asp-route-id="@product.Id" class="btn btn-primary m-1"> <!-- Añadido margen abajo -->
                         <i class="fa fa-edit"></i> Edit
                     </a>
                     <form asp-action="Delete" asp-controller="Product" asp-route-id="@product.Id" method="post" class="d-inline">
                         <input type="hidden" name="__RequestVerificationToken" value="@Html.AntiForgeryToken()" />
-                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('¿Está seguro que desea eliminar este registro?');">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está seguro que desea eliminar este registro?');"> <!-- Botón relleno -->
                             <i class="fa fa-trash"></i> Delete
                         </button>
                     </form>

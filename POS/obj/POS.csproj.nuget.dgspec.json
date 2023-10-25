@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/semahr/RiderProjects/Actividad_Final_UD_II/POS/POS.csproj": {}
+    "/home/semahr/RiderProjects/pos_net/POS/POS.csproj": {}
   },
   "projects": {
-    "/home/semahr/RiderProjects/Actividad_Final_UD_II/POS/POS.csproj": {
+    "/home/semahr/RiderProjects/pos_net/POS/POS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/semahr/RiderProjects/Actividad_Final_UD_II/POS/POS.csproj",
+        "projectUniqueName": "/home/semahr/RiderProjects/pos_net/POS/POS.csproj",
         "projectName": "POS",
-        "projectPath": "/home/semahr/RiderProjects/Actividad_Final_UD_II/POS/POS.csproj",
+        "projectPath": "/home/semahr/RiderProjects/pos_net/POS/POS.csproj",
         "packagesPath": "/home/semahr/.nuget/packages/",
-        "outputPath": "/home/semahr/RiderProjects/Actividad_Final_UD_II/POS/obj/",
+        "outputPath": "/home/semahr/RiderProjects/pos_net/POS/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/semahr/.nuget/NuGet/NuGet.Config"
