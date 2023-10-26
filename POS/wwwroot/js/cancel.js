@@ -1,4 +1,4 @@
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', async function () {
     const confirmCancel = $('#confirmationModal');
     const supervisorTokenInput = $('#supervisorToken');
     const form = $('form');
@@ -13,7 +13,7 @@ $(document).ready(function() {
         const token = supervisorTokenInput.val();
         if (token) {
             $.ajax({
-                url: '/VerifySupervisorToken',
+                url: 'Sale/VerifySupervisorToken',
                 type: 'POST',
                 data: {token: token},
                 success: function (response) {
@@ -48,6 +48,11 @@ $(document).ready(function() {
     });
 
     confirmCancel.on('click', '.confirm-btn', cancelSale); // Asegúrate de que tu botón de confirmación en el modal tiene una clase 'confirm-btn'
+
+    $('.btn-primary').on('click', function(e) {
+        e.preventDefault();
+        confirmCancel.modal('show');
+    });
 });
 
 
