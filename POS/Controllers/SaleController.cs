@@ -82,20 +82,6 @@ public class SaleController : Controller
         return View();
     }
     
-    // HTTP METHODS
-    /*
-    [HttpGet("/Product/GetByCode/${productCode}")]
-    public IActionResult GetProductByCode(string productCode)
-    {
-        var product = _productService.GetProductByCode(productCode);
-        if(product == null)
-        {
-            return BadRequest("Producto no encontrado");
-        }
-        return Ok(product);
-    }
-    */
-    
     [HttpPost("/Sale/Register")]
     public async Task<IActionResult> Register()
     {
@@ -110,7 +96,6 @@ public class SaleController : Controller
             }
 
             var sale = JsonSerializer.Deserialize<SaleModel>(body);
-            Console.WriteLine(sale.ToJson());
 
             if (!ModelState.IsValid) return BadRequest();
             _saleService.CreateSale(sale);
@@ -127,13 +112,24 @@ public class SaleController : Controller
     [HttpPost]
     public IActionResult CancelSale(SaleModel sale)
     {
-        Console.WriteLine(sale.ToJson());
         if(sale.Id == null || sale.Id.Equals("")) 
         {
             return BadRequest("Id de venta inválido");
         }
 
         _saleService.CancelSale(sale.Id);
+        
+        var saleOrigin = _saleService.GetSale(sale.Id);
+        
+        // add stock back to products
+        foreach(var saleDetail in saleOrigin.SaleDetails)
+        {
+            var productCode = saleDetail.Code;
+            var product = _productService.GetProductByCode(productCode);
+            product.Stock += saleDetail.Quantity;
+            _productService.UpdateProduct(product.Id.ToString(), product);
+        }
+        
         return RedirectToAction("Index");
     }
 

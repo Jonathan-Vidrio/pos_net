@@ -14,7 +14,7 @@ public class SaleService
     {
         var database = mongoClient.GetDatabase(settings.Database);
         _sales = database.GetCollection<SaleModel>("sales");
-        _cancelations = database.GetCollection<CanceledSaleModel>("saleCancelations");
+        _cancelations = database.GetCollection<CanceledSaleModel>("canceled_sales");
     }
     
     public List<SaleModel> GetAllSales()

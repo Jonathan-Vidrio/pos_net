@@ -12,7 +12,7 @@ public class CanceledSaleService
     public CanceledSaleService(MongoClient mongoClient, IMongoDbSettings settings)
     {
         var database = mongoClient.GetDatabase(settings.Database);
-        _canceledSales = database.GetCollection<CanceledSaleModel>("saleCancelations");
+        _canceledSales = database.GetCollection<CanceledSaleModel>("canceled_sales");
     }
     
     public List<CanceledSaleModel> GetAll()
@@ -23,5 +23,11 @@ public class CanceledSaleService
     public CanceledSaleModel GetCanceledSale(string id)
     {
         return _canceledSales.Find(sale => sale.Id == id).FirstOrDefault();
+    }
+    
+    public CanceledSaleModel CreateCanceledSale(CanceledSaleModel canceledSale)
+    {
+        _canceledSales.InsertOne(canceledSale);
+        return canceledSale;
     }
 }

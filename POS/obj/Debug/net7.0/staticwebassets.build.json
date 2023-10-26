@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "kfpgOKXmBtIZAkzKGO9qiwCDXhlB/sIkf3VIEpLaWXI=",
+  "Hash": "FlMZpwPxqQqHZTBZgNMcqrUNxnDEx3v09TN+4skaFg0=",
   "Source": "POS",
   "BasePath": "_content/POS",
   "Mode": "Default",
@@ -85,12 +85,12 @@
       "OriginalItemSpec": "wwwroot/favicon.ico"
     },
     {
-      "Identity": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/js/cancelSale.js",
+      "Identity": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/js/cancel.js",
       "SourceId": "POS",
       "SourceType": "Discovered",
       "ContentRoot": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/",
       "BasePath": "_content/POS",
-      "RelativePath": "js/cancelSale.js",
+      "RelativePath": "js/cancel.js",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -99,7 +99,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/js/cancelSale.js"
+      "OriginalItemSpec": "wwwroot/js/cancel.js"
     },
     {
       "Identity": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/js/sale.js",

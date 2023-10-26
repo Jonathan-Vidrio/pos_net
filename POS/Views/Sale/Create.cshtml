@@ -42,6 +42,7 @@
             <tr>
                 <th>Código</th>
                 <th>Descripción</th>
+                <th>Existencias</th>
                 <th>Precio</th>
                 <th>Cantidad</th>
                 <th>Subtotal</th>
@@ -54,7 +55,7 @@
         </table>
         <!-- Pie de la sección que muestra el total y el botón para completar la venta -->
         <div class="card-footer d-flex justify-content-between">
-            <h5>Total: <span id="cartTotal">$0.00</span></h5>
+            <h1 style="color:  #146c43">Total: <span id="cartTotal">$0.00</span></h1>
             <button type="button" class="btn btn-success" id="completeSale">Completar Venta</button>
         </div>
     </div>
@@ -96,7 +97,7 @@
                 <!-- Campos para mostrar el total de la venta, la cantidad recibida y el cambio a devolver -->
                 <div class="mb-3">
                     <label for="totalSale" class="form-label">Total de la Venta:</label>
-                    <input type="text" class="form-control" id="totalSale" readonly>
+                    <input type="text" class="form-control" id="totalSale" style="font-size: 40px; color:  #146c43" readonly>
                 </div>
                 <div class="mb-3">
                     <label for="amountReceived" class="form-label">Cantidad Recibida:</label>

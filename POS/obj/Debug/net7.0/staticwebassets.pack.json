@@ -13,8 +13,8 @@
       "PackagePath": "staticwebassets/favicon.ico"
     },
     {
-      "Id": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/js/cancelSale.js",
-      "PackagePath": "staticwebassets/js/cancelSale.js"
+      "Id": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/js/cancel.js",
+      "PackagePath": "staticwebassets/js/cancel.js"
     },
     {
       "Id": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/js/sale.js",

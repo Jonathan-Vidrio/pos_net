@@ -42,7 +42,7 @@ public class ProductService
 
     public ProductModel GetProductByCode(string code)
     {
-        return _products.Find(product => product.Code == code).FirstOrDefault();
+        return _products.Find(product => product.Code == code && product.Status == true).FirstOrDefault();
     }
     
     public IEnumerable<ProductModel> GetProductsByCodes(IEnumerable<string> codes)
@@ -60,6 +60,11 @@ public class ProductService
     public void UpdateProduct(string id, ProductModel product)
     {
         _products.ReplaceOne(product => product.Id == ObjectId.Parse(id), product);
+    }
+    
+    public void UpdateProductByCode(string code, ProductModel product)
+    {
+        _products.ReplaceOne(product => product.Code == code, product);
     }
 
     public void SubstractStock(List<SaleDetailModel> salesDetails)

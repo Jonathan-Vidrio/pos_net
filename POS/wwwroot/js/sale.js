@@ -32,9 +32,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             let row = tbody.insertRow();
             row.insertCell(0).innerText = product.code;
             row.insertCell(1).innerText = product.description;
-            row.insertCell(2).innerText = product.price;
+            row.insertCell(2).innerText = product.stock; // Añade la existencia o stock aquí
+            row.insertCell(3).innerText = product.price;
 
-            let selectCell = row.insertCell(3);
+            let selectCell = row.insertCell(4);
             let selectButton = document.createElement('button');
             selectButton.innerText = 'Seleccionar';
             selectButton.classList.add('btn', 'btn-primary');
@@ -66,10 +67,24 @@ document.addEventListener('DOMContentLoaded', async function () {
                 productsModal.modal('show');
                 return;
             }
+            
+            // Comprobar existencias
+            if (product.stock <= 0) {
+                alert('Producto sin existencias.');
+                return;
+            }
+            
+            // Comprobar si la cantidad de productos en el carrito es igual a la cantidad en existencia para ya no agregar más
+            const rows = [...cartBody.querySelectorAll('tr')];
+            const total = rows.reduce((acc, row) => acc + parseInt(row.cells[4].querySelector('span').innerText), 0);
+            if (total >= product.stock) {
+                alert('No hay más existencias de este producto.');
+                return;
+            }
 
             let existingRow = [...cartBody.querySelectorAll('tr')].find(row => row.cells[0].innerText === productCode);
             if (existingRow) {
-                const quantitySpan = existingRow.cells[3].querySelector('span');
+                const quantitySpan = existingRow.cells[4].querySelector('span');
                 quantitySpan.innerText = parseInt(quantitySpan.innerText) + 1;
                 updateSubtotal(existingRow);
                 updateTotal();
@@ -89,9 +104,9 @@ document.addEventListener('DOMContentLoaded', async function () {
      * @param {HTMLElement} row - Fila del carrito a actualizar.
      */
     const updateSubtotal = (row) => {
-        const price = parseFloat(row.cells[2].innerText);
-        const quantity = parseInt(row.cells[3].querySelector('span').innerText);
-        row.cells[4].innerText = (price * quantity).toFixed(2);
+        const price = parseFloat(row.cells[3].innerText);
+        const quantity = parseInt(row.cells[4].querySelector('span').innerText);
+        row.cells[5].innerText = (price * quantity).toFixed(2);
     }
 
     /**
@@ -99,7 +114,7 @@ document.addEventListener('DOMContentLoaded', async function () {
      */
     const updateTotal = () => {
         const rows = [...cartBody.querySelectorAll('tr')];
-        const total = rows.reduce((acc, row) => acc + parseFloat(row.cells[4].innerText), 0);
+        const total = rows.reduce((acc, row) => acc + parseFloat(row.cells[5].innerText), 0);
         cartTotal.innerText = `$${total.toFixed(2)}`;
     }
 
@@ -112,13 +127,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         newRow.insertCell(0).innerText = product.code;
         newRow.insertCell(1).innerText = product.description;
-        newRow.insertCell(2).innerText = product.price;
-        newRow.insertCell(3).innerHTML = '<span>1</span>';
+        newRow.insertCell(2).innerText = product.stock; // Añade la existencia o stock aquí
+        newRow.insertCell(3).innerText = product.price;
+        newRow.insertCell(4).innerHTML = '<span>1</span>';
 
         let subtotal = parseFloat(product.price).toFixed(2);
-        newRow.insertCell(4).innerText = subtotal;
+        newRow.insertCell(5).innerText = subtotal;
 
-        let deleteCell = newRow.insertCell(5);
+        let deleteCell = newRow.insertCell(6);
         let deleteButton = document.createElement('button');
         deleteButton.innerText = 'Eliminar';
         deleteButton.classList.add('btn', 'btn-danger');
@@ -149,14 +165,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.error(error);
             alert('Error al buscar productos.');
         }
-    }
-
-    const updateQuantityFunction = () => {
-        const newQuantity = document.getElementById('newQuantity').value;
-        clickedRow.cells[3].querySelector('span').innerText = newQuantity;
-        updateSubtotal(clickedRow);
-        updateTotal();
-        quantityModal.modal('hide');
     }
 
     /**
@@ -203,9 +211,9 @@ document.addEventListener('DOMContentLoaded', async function () {
                 Change: Change,
                 SaleDetails: [...cartBody.querySelectorAll('tr')].map(row => ({
                     Code: row.cells[0].innerText,
-                    Quantity: parseInt(row.cells[3].querySelector('span').innerText),
-                    UnitPrice: parseFloat(row.cells[2].innerText),
-                    Subtotal: parseFloat(row.cells[2].innerText) * parseInt(row.cells[3].querySelector('span').innerText)
+                    Quantity: parseInt(row.cells[4].querySelector('span').innerText),
+                    UnitPrice: parseFloat(row.cells[3].innerText),
+                    Subtotal: parseFloat(row.cells[3].innerText) * parseInt(row.cells[4].querySelector('span').innerText)
                 })),
                 Status: true
             };
@@ -248,7 +256,18 @@ document.addEventListener('DOMContentLoaded', async function () {
         };
     }
 
-    const debouncedConfirmSale = debounce(confirmSale, 200);
+    const debouncedConfirmSale = debounce(confirmSale, 400);
+    
+    const verifyRows = () => {
+        // verificar la tabla del carrito no esté vacía
+        var countRows = cartBody.rows.length;
+        if (countRows > 0) {
+            completionModal.modal('show');
+
+        } else {
+            alert("No hay productos registrados en la venta");
+        }
+    }
 
     productCodeInput.focus();
 
@@ -276,11 +295,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     cartBody.addEventListener('dblclick', function (event) {
         if (event.target.tagName === 'TD') {
             const clickedRow = event.target.closest('tr');
+            
+            // insertar en el input "newQuantity" la cantidad actual
+            document.getElementById('newQuantity').value = parseInt(clickedRow.cells[4].querySelector('span').innerText);
 
             // Función que se ejecutará cuando presiones "saveQuantity" o Enter
             function updateQuantity() {
                 const newQuantity = document.getElementById('newQuantity').value;
-                clickedRow.cells[3].querySelector('span').innerText = newQuantity;
+                clickedRow.cells[4].querySelector('span').innerText = newQuantity;
                 updateSubtotal(clickedRow);
                 updateTotal();
                 quantityModal.modal('hide');
@@ -306,7 +328,15 @@ document.addEventListener('DOMContentLoaded', async function () {
         document.getElementById('newQuantity').focus();
     });
 
-    completeSaleButton.addEventListener('click', completionModal.modal.bind(completionModal, 'show'));
+    completeSaleButton.addEventListener('click', function () {
+        // verificar la tabla del carrito no esté vacía
+        var countRows = cartBody.rows.length;
+        if (countRows > 0) {
+            completionModal.modal.bind(completionModal, 'show')
+        } else {
+            alert("No hay productos registrados en la venta");
+        }
+    });
 
     document.addEventListener('keydown',  function (event) {
         if (event.key === 'F8') {
@@ -314,7 +344,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         if (event.key === 'Escape' || event.key === 'Esc') {
-            completionModal.modal('show');
+            verifyRows();
         }
 
         if (event.key === 'Enter' && completionModal.hasClass('show')) {

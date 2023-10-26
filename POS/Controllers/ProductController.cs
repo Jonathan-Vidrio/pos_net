@@ -72,8 +72,13 @@ public class ProductController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Edit(string id, ProductModel product)
     {
-        if (!ModelState.IsValid) return View(product);
-        _service.UpdateProduct(id, product);
+        if (ModelState.IsValid)
+        {
+            product.Status = true;
+            Console.Write(product.ToJson());
+            _service.UpdateProduct(id, product);
+            return RedirectToAction(nameof(Index));
+        }
         return RedirectToAction(nameof(Index));
     }
 
