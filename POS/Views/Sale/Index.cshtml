@@ -7,7 +7,7 @@
 </header>
 
 <div>
-    <table class="table table-hover">
+    <table class="table">
         <thead>
         <tr>
             <th>Fecha</th>
@@ -18,15 +18,15 @@
             <th style="width: 12%">Actions</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="cartBody">
         @foreach (var sale in Model)
         {
             <tr>
                 <td>@sale.Date</td>
                 <td>@sale.Client</td>
-                <td>@sale.Total</td>
-                <td>@sale.CashReceived</td>
-                <td>@sale.Change</td>
+                <td>@sale.Total.ToString("C")</td>
+                <td>@sale.CashReceived.ToString("C")</td>
+                <td>@sale.Change.ToString("C")</td>
                 <td>
                     <!-- mostrar detalles -->
                     <a asp-action="Details" asp-controller="Sale" asp-route-id="@sale.Id" class="btn btn-primary m-1">

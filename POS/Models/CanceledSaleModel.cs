@@ -3,10 +3,11 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace POS.Models;
 
-public class SaleCancellationModel
+public class CanceledSaleModel
 {
     [BsonId]
-    public ObjectId Id { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
     
     [BsonElement("saleId")]
     public ObjectId SaleId { get; set; }

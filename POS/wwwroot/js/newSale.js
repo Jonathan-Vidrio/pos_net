@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const completeSaleButton = document.getElementById('completeSale');
     const confirmSaleButton = document.getElementById('confirmSale');
     const searchProductButton = document.getElementById('searchProductButton');
+    const saveQuantityButton = document.getElementById('saveQuantity');
     const productsModal = $('#productsModal');
     const completionModal = $('#completionModal');
     const quantityModal = $('#quantityModal');
@@ -136,6 +137,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        function updateQuantityFunction() {
+            const newQuantity = document.getElementById('newQuantity').value;
+            clickedRow.cells[3].querySelector('span').innerText = newQuantity;
+            updateSubtotal(clickedRow);
+            updateTotal();
+            quantityModal.modal('hide');
+        }
+
         const Total = parseFloat(rawTotal);
         const CashReceived = parseFloat(rawReceived);
         const Change = CashReceived - Total;
@@ -223,6 +232,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('updateQuantityButton').onclick = function() {
                 const newQuantity = document.getElementById('newQuantity').value;
                 clickedRow.cells[3].querySelector('span').innerText = newQuantity;
+                saveQuantityButton.removeEventListener('click', updateQuantityFunction);
+                saveQuantityButton.addEventListener('click', updateQuantityFunction);
                 updateSubtotal(clickedRow);
                 updateTotal();
                 quantityModal.modal('hide');
@@ -270,7 +281,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const amount = parseFloat(amountReceived.value);
         const total = parseFloat(cartTotal.innerText.replace('$', ''));
         const change = amount - total;
-        changeAmount.value = change.toFixed(2);  // Modificación aquí
+
+        if (change < 0 || isNaN(change)) {
+            changeAmount.value = '0.00';
+            confirmSaleButton.disabled = true; // Deshabilitar el botón de finalizar venta
+        } else {
+            changeAmount.value = change.toFixed(2);
+            confirmSaleButton.disabled = false; // Habilitar el botón de finalizar venta
+        }
     });
 
     confirmSaleButton.addEventListener('click', confirmSale);

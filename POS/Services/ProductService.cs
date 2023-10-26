@@ -39,6 +39,12 @@ public class ProductService
         return _products.Find(product => product.Code == code).FirstOrDefault();
     }
     
+    public IEnumerable<ProductModel> GetProductsByCodes(IEnumerable<string> codes)
+    {
+        var filter = Builders<ProductModel>.Filter.In(p => p.Code, codes);
+        return _products.Find(filter).ToList();
+    }
+    
     public ProductModel CreateProduct(ProductModel product)
     {
         _products.InsertOne(product);
@@ -48,6 +54,18 @@ public class ProductService
     public void UpdateProduct(string id, ProductModel product)
     {
         _products.ReplaceOne(product => product.Id == ObjectId.Parse(id), product);
+    }
+
+    public void UpdateStock(List<SaleDetailModel> salesDetails)
+    {
+        var codes = salesDetails.Select(s => s.Code);
+        var products = GetProductsByCodes(codes);
+        foreach(var product in products)
+        {
+            var saleDetail = salesDetails.FirstOrDefault(s => s.Code == product.Code);
+            product.Stock -= saleDetail.Quantity;
+            UpdateProduct(product.Id.ToString(), product);
+        }
     }
     
     public void DeleteProduct(string id)

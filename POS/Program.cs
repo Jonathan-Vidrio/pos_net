@@ -16,6 +16,7 @@ builder.Services.Configure<MongoDbSettings>(
 builder.Services.AddSingleton<ProductService>();
 builder.Services.AddSingleton<SaleService>();
 builder.Services.AddSingleton<SupervisorService>();
+builder.Services.AddSingleton<CanceledSaleService>();
 
 builder.Services.AddSingleton<IMongoDbSettings>(sp =>
     sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);

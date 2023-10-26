@@ -8,13 +8,13 @@ namespace POS.Services;
 public class SaleService
 {
     private readonly IMongoCollection<SaleModel> _sales;
-    private readonly IMongoCollection<SaleCancellationModel> _cancelations;
+    private readonly IMongoCollection<CanceledSaleModel> _cancelations;
     
     public SaleService(MongoClient mongoClient, IMongoDbSettings settings)
     {
         var database = mongoClient.GetDatabase(settings.Database);
         _sales = database.GetCollection<SaleModel>("sales");
-        _cancelations = database.GetCollection<SaleCancellationModel>("saleCancelations");
+        _cancelations = database.GetCollection<CanceledSaleModel>("saleCancelations");
     }
     
     public List<SaleModel> GetAllSales()
@@ -29,7 +29,6 @@ public class SaleService
 
     public SaleModel GetSale(string id)
     {
-        // el id no es un objectid es un string
         return _sales.Find(sale => sale.Id == id).FirstOrDefault();
     }
     
@@ -50,7 +49,7 @@ public class SaleService
         sale.Status = false;
         _sales.ReplaceOne(sale => sale.Id == id, sale);
         
-        var cancelation = new SaleCancellationModel
+        var cancelation = new CanceledSaleModel
         {
             SaleId = ObjectId.Parse(id),
             DateCancelled = DateTime.Now,

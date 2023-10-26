@@ -12,12 +12,23 @@ public class SaleController : Controller
     private readonly ILogger<SaleController> _logger;
     private readonly SaleService _saleService;
     private readonly SupervisorService _supervisorService;
+    private readonly ProductService _productService;
+    private readonly CanceledSaleService _canceledSaleService;
 
-    public SaleController(ILogger<SaleController> logger, SaleService saleService, SupervisorService supervisorService)
+    public SaleController
+    (
+        ILogger<SaleController> logger,
+        SaleService saleService, 
+        SupervisorService supervisorService,
+        ProductService productService,
+        CanceledSaleService canceledSaleService
+        )
     {
         _logger = logger;
         _saleService = saleService;
         _supervisorService = supervisorService;
+        _productService = productService;
+        _canceledSaleService = canceledSaleService;
     }
     
     // GET
@@ -27,15 +38,42 @@ public class SaleController : Controller
         return View(sales);
     }
     
-    public IActionResult Canceled()
+    public IActionResult CanceledIndex()
     {
+        var canceledSales = _canceledSaleService.GetAll();
         var sales = _saleService.GetCanceledSales();
-        return View(sales);
+    
+        var viewModelList = new List<CanceledSaleViewModel>();
+        foreach(var canceledSale in canceledSales)
+        {
+            var sale = sales.FirstOrDefault(s => s.Id == canceledSale.SaleId.ToString());
+
+            if(sale != null)
+            {
+                viewModelList.Add(new CanceledSaleViewModel 
+                {
+                    Sale = sale,
+                    CanceledSale = canceledSale
+                });
+            }
+            else
+            {
+                Console.WriteLine("Sale not found");
+            }
+        }
+
+        return View(viewModelList);
     }
 
     public IActionResult Details(string id)
     {
-        var sale = _saleService.GetSale(id);
+        SaleModel sale = _saleService.GetSale(id);
+
+        var productCodes = sale.SaleDetails.Select(s => s.Code).Distinct().ToList();
+        var relatedProducts = _productService.GetProductsByCodes(productCodes);
+        var productMap = relatedProducts.ToDictionary(p => p.Code, p => p);
+        ViewBag.ProductMap = productMap;
+
         return View(sale);
     }
     
@@ -45,7 +83,18 @@ public class SaleController : Controller
     }
     
     // HTTP METHODS
-    
+    /*
+    [HttpGet("/Product/GetByCode/${productCode}")]
+    public IActionResult GetProductByCode(string productCode)
+    {
+        var product = _productService.GetProductByCode(productCode);
+        if(product == null)
+        {
+            return BadRequest("Producto no encontrado");
+        }
+        return Ok(product);
+    }
+    */
     
     [HttpPost("/Sale/Register")]
     public async Task<IActionResult> Register()
@@ -65,6 +114,7 @@ public class SaleController : Controller
 
             if (!ModelState.IsValid) return BadRequest();
             _saleService.CreateSale(sale);
+            _productService.UpdateStock(sale.SaleDetails);
             return Ok();
         }
         catch (Exception ex)
@@ -84,7 +134,7 @@ public class SaleController : Controller
         }
 
         _saleService.CancelSale(sale.Id);
-        return RedirectToAction("Index"); // Redirige a la página principal o donde desees después de cancelar
+        return RedirectToAction("Index");
     }
 
     [HttpPost("/VerifySupervisorToken")]

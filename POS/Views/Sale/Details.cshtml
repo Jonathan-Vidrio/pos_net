@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
+    var productMap = (Dictionary<string, ProductModel>)ViewBag.ProductMap;
 }
 
 <!-- Mostrar información de la venta -->
@@ -51,30 +52,30 @@
 </div>
 
 <!-- mostrar los detalles de la venta -->
-<div class="card">
-    <div class="card-header">
-        <h4 class="text-center">Productos Vendidos</h4>
-    </div>
-    <table class="table mb-0">
-        <thead>
+<table class="table mb-0">
+    <thead>
         <tr>
             <th>Código</th>
-            <th>Descripción</th>
             <th>Precio</th>
+            <th>Descripción</th>
             <th>Cantidad</th>
             <th>Subtotal</th>
         </tr>
-        </thead>
-        <tbody id="cartBody">
-        <!-- Espacio donde se mostrarán los productos agregados -->
-        </tbody>
-    </table>
-    <!-- Pie de la sección que muestra el total y el botón para completar la venta -->
-    <div class="card-footer d-flex justify-content-between">
-        <h5>Total: <span id="cartTotal">$0.00</span></h5>
-    </div>
-</div>
-
+    </thead>
+    <tbody id="cartBody">
+    @foreach (var detail in Model.SaleDetails)
+    {
+        var product = productMap[detail.Code];
+        <tr>
+            <td>@detail.Code</td>
+            <td>@product.Description</td>
+            <td>@detail.UnitPrice.ToString("C")</td>
+            <td>@detail.Quantity</td>
+            <td>@detail.Subtotal.ToString("C")</td>
+        </tr>
+    }
+    </tbody>
+</table>
 
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog">

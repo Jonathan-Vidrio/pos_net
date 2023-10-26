@@ -1,0 +1,36 @@
+@{
+    ViewBag.Title = "Canceled Sales";
+    Layout = "_Layout";
+}
+
+<header class="text-center mb-5">
+    <h4 class="display-4">Ventas Canceladas</h4>
+</header>
+
+<div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Fecha Venta</th>
+            <th>Fecha Cancelación</th>
+            <th>Folio Venta</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Supervisor</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var viewModel in Model)
+        {
+            <tr>
+                <td>@viewModel.Sale.Date</td>
+                <td>@viewModel.CanceledSale</td>
+                <td>@viewModel.Sale.Id</td>
+                <td>@viewModel.Sale.Client</td>
+                <td>@viewModel.Sale.Total.ToString("C")</td>
+                <td>@viewModel.CanceledSale.SupervisorId</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
