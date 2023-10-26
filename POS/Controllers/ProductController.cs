@@ -17,7 +17,7 @@ public class ProductController : Controller
     // GET
     public IActionResult Index()
     {
-        var products = _service.GetProducts();
+        var products = _service.GetProductsEnabled();
         return View(products);
     }
     
@@ -35,17 +35,22 @@ public class ProductController : Controller
     // HTTP METHODS
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(ProductModel product)
+    public async Task<IActionResult> Create(ProductModel product)
     {
-        if (!ModelState.IsValid) return View(product);
-        _service.CreateProduct(product);
-        return RedirectToAction(nameof(Index));
+        if (ModelState.IsValid)
+        {
+            product.Status = true;
+            Console.Write(product.ToJson());
+            _service.CreateProduct(product);
+            return RedirectToAction(nameof(Index));
+        }
+        return View(product);
     }
     
-    [HttpGet("Product/GetAll")]
+    [HttpGet("/Product/GetProductsEnabled")]
     public IActionResult GetAll()
     {
-        var products = _service.GetProducts();
+        var products = _service.GetProductsEnabled();
         return Json(products);
     }
     
@@ -76,7 +81,7 @@ public class ProductController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Delete(string id)
     {
-        _service.DeleteProduct(id);
+        _service.DisableProduct(id);
         return RedirectToAction(nameof(Index));
     }
 }

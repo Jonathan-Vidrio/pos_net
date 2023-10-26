@@ -1,4 +1,6 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function () {
+
+    // Referencias a elementos del DOM
     const searchInput = document.getElementById('productSearchInput');
     const productCodeInput = document.getElementById('productCode');
     const cartBody = document.querySelector('#cartBody');
@@ -11,12 +13,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const completeSaleButton = document.getElementById('completeSale');
     const confirmSaleButton = document.getElementById('confirmSale');
     const searchProductButton = document.getElementById('searchProductButton');
-    const saveQuantityButton = document.getElementById('saveQuantity');
+    const salesForm = document.getElementById('salesForm');
+
+    // Referencias a modales (usando jQuery)
     const productsModal = $('#productsModal');
     const completionModal = $('#completionModal');
     const quantityModal = $('#quantityModal');
 
-    function populateProducts(products) {
+    /**
+     * Función para popular la lista de productos en una tabla.
+     * @param {Array} products - Lista de productos a mostrar.
+     */
+    const populateProducts = (products) => {
         const tbody = document.getElementById('productsList');
         tbody.innerHTML = '';  // Limpiar tabla
 
@@ -30,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let selectButton = document.createElement('button');
             selectButton.innerText = 'Seleccionar';
             selectButton.classList.add('btn', 'btn-primary');
-            selectButton.onclick = function() {
+            selectButton.onclick = function () {
                 productCodeInput.value = product.code;
                 addProductToCart();
                 productsModal.modal('hide');
@@ -39,7 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    async function addProductToCart() {
+    /**
+     * Función para añadir un producto al carrito utilizando su código.
+     */
+    const addProductToCart = async () => {
         const productCode = productCodeInput.value;
 
         try {
@@ -73,19 +84,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function updateSubtotal(row) {
+    /**
+     * Función para actualizar el subtotal de una fila específica en el carrito.
+     * @param {HTMLElement} row - Fila del carrito a actualizar.
+     */
+    const updateSubtotal = (row) => {
         const price = parseFloat(row.cells[2].innerText);
         const quantity = parseInt(row.cells[3].querySelector('span').innerText);
         row.cells[4].innerText = (price * quantity).toFixed(2);
     }
 
-    function updateTotal() {
+    /**
+     * Función para actualizar el total del carrito.
+     */
+    const updateTotal = () => {
         const rows = [...cartBody.querySelectorAll('tr')];
         const total = rows.reduce((acc, row) => acc + parseFloat(row.cells[4].innerText), 0);
         cartTotal.innerText = `$${total.toFixed(2)}`;
     }
 
-    function addToCart(product) {
+    /**
+     * Función para agregar un producto específico al carrito.
+     * @param {Object} product - Producto a agregar al carrito.
+     */
+    const addToCart = (product) => {
         let newRow = cartBody.insertRow();
 
         newRow.insertCell(0).innerText = product.code;
@@ -100,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let deleteButton = document.createElement('button');
         deleteButton.innerText = 'Eliminar';
         deleteButton.classList.add('btn', 'btn-danger');
-        deleteButton.onclick = function() {
+        deleteButton.onclick = function () {
             cartBody.removeChild(newRow);
             updateTotal();
         };
@@ -108,7 +130,10 @@ document.addEventListener('DOMContentLoaded', function() {
         productCodeInput.focus();
     }
 
-    async function searchProducts() {
+    /**
+     * Función para buscar productos según el valor ingresado en el campo de búsqueda.
+     */
+    const searchProducts = async () => {
         const query = searchInput.value;
         if (!query) return;
 
@@ -125,8 +150,20 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Error al buscar productos.');
         }
     }
-    
+
+    const updateQuantityFunction = () => {
+        const newQuantity = document.getElementById('newQuantity').value;
+        clickedRow.cells[3].querySelector('span').innerText = newQuantity;
+        updateSubtotal(clickedRow);
+        updateTotal();
+        quantityModal.modal('hide');
+    }
+
+    /**
+     * Función para confirmar y procesar la venta.
+     */
     const confirmSale = () => {
+        confirmSaleButton.disabled = true; // Deshabilitar el botón de finalizar venta
         // Verificación de valores
         const rawTotal = cartTotal.innerText.replace('$', '');
         const rawReceived = amountReceived.value;
@@ -137,75 +174,87 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        function updateQuantityFunction() {
-            const newQuantity = document.getElementById('newQuantity').value;
-            clickedRow.cells[3].querySelector('span').innerText = newQuantity;
-            updateSubtotal(clickedRow);
-            updateTotal();
-            quantityModal.modal('hide');
-        }
-
-        const Total = parseFloat(rawTotal);
-        const CashReceived = parseFloat(rawReceived);
-        const Change = CashReceived - Total;
-
-        // Verificar si Change es NaN
-        if (isNaN(Change)) {
-            console.error("Change calculation resulted in NaN", Total, CashReceived, Change);
-            alert('Error: No se pudo calcular el cambio.');
+        if ((rawReceived - rawTotal) < 0) {
+            alert('Error: El monto recibido es menor al total de la venta.');
             return;
-        }
 
-        const sale = {
-            Date: new Date().toISOString(),
-            Client: "Público en General", // Aquí puedes agregar una forma de obtener un cliente específico si es necesario
-            Total: Total,
-            CashReceived: CashReceived,
-            Change: Change,
-            SaleDetails: [...cartBody.querySelectorAll('tr')].map(row => ({
-                Code: row.cells[0].innerText,
-                Quantity: parseInt(row.cells[3].querySelector('span').innerText),
-                UnitPrice: parseFloat(row.cells[2].innerText),
-                Subtotal: parseFloat(row.cells[2].innerText) * parseInt(row.cells[3].querySelector('span').innerText)
-            })),
-            Status: true
-        };
+        } else {
+            /**
+             * Función para comprobar si un valor es numérico.
+             * @param {any} value - Valor a comprobar.
+             * @returns {boolean} Verdadero si el valor es numérico, falso de lo contrario.
+             */
+            const Total = parseFloat(rawTotal);
+            const CashReceived = parseFloat(rawReceived);
+            const Change = CashReceived - Total;
 
-        console.log(JSON.stringify(sale));
-
-        fetch('/Sale/Register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(sale)
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Error al registrar venta');
+            // Verificar si Change es NaN
+            if (isNaN(Change)) {
+                console.error("Change calculation resulted in NaN", Total, CashReceived, Change);
+                alert('Error: No se pudo calcular el cambio.');
+                return;
             }
-        }).then(data => {
-            alert('Venta registrada exitosamente');
-            cartBody.innerHTML = '';
-            cartTotal.innerText = '$0.00';
-            amountReceived.value = '';
-            changeAmount.innerText = '$0.00';
-            productCodeInput.focus();
-            completionModal.modal('hide');
-        }).catch(error => {
-            console.log(error);
-            alert('Error al registrar la venta.');
-        });
+
+            const sale = {
+                Date: new Date().toISOString(),
+                Client: "Público en General", // Aquí puedes agregar una forma de obtener un cliente específico si es necesario
+                Total: Total,
+                CashReceived: CashReceived,
+                Change: Change,
+                SaleDetails: [...cartBody.querySelectorAll('tr')].map(row => ({
+                    Code: row.cells[0].innerText,
+                    Quantity: parseInt(row.cells[3].querySelector('span').innerText),
+                    UnitPrice: parseFloat(row.cells[2].innerText),
+                    Subtotal: parseFloat(row.cells[2].innerText) * parseInt(row.cells[3].querySelector('span').innerText)
+                })),
+                Status: true
+            };
+
+            fetch('/Sale/Register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(sale)
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al registrar venta');
+                }
+            }).then(data => {
+                alert('Venta registrada exitosamente');
+                cartBody.innerHTML = '';
+                cartTotal.innerText = '$0.00';
+                amountReceived.value = '';
+                changeAmount.innerText = '$0.00';
+                productCodeInput.focus();
+                completionModal.modal('hide');
+            }).catch(error => {
+                console.log(error);
+                alert('Error al registrar la venta.');
+            });
+        }
+        confirmSaleButton.disabled = false;
     }
 
     function isNumeric(value) {
         return !isNaN(parseFloat(value)) && isFinite(value);
     }
 
+    const debounce = (func, wait = 100) => {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    const debouncedConfirmSale = debounce(confirmSale, 200);
+
     productCodeInput.focus();
 
-    productsModal.on('show.bs.modal', async function() {
+    productsModal.on('show.bs.modal', async function () {
         try {
-            const response = await fetch('/Product/GetAll');
+            const response = await fetch('/Product/GetProductsEnabled');
             if (!response.ok) {
                 throw new Error('Error al obtener productos');
             }
@@ -218,32 +267,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    productsModal.on('shown.bs.modal', function() {
+    productsModal.on('shown.bs.modal', function () {
         searchInput.focus();
     });
 
     searchProductButton.addEventListener('click', searchProducts);
 
-    cartBody.addEventListener('dblclick', function(event) {
+    cartBody.addEventListener('dblclick', function (event) {
         if (event.target.tagName === 'TD') {
-            quantityModal.modal('show');
             const clickedRow = event.target.closest('tr');
 
-            document.getElementById('updateQuantityButton').onclick = function() {
+            // Función que se ejecutará cuando presiones "saveQuantity" o Enter
+            function updateQuantity() {
                 const newQuantity = document.getElementById('newQuantity').value;
                 clickedRow.cells[3].querySelector('span').innerText = newQuantity;
-                saveQuantityButton.removeEventListener('click', updateQuantityFunction);
-                saveQuantityButton.addEventListener('click', updateQuantityFunction);
                 updateSubtotal(clickedRow);
                 updateTotal();
                 quantityModal.modal('hide');
-            };
+            }
+
+            // Escuchar el evento click del botón "saveQuantity"
+            document.getElementById('saveQuantity').onclick = updateQuantity;
+
+            // Escuchar el evento keyup del input "newQuantity"
+            document.getElementById('newQuantity').addEventListener('keyup', function (event) {
+                // Si la tecla presionada es Enter (código 13)
+                if (event.keyCode === 13) {
+                    updateQuantity();
+                }
+            });
+
+            // Mostrar el modal
+            quantityModal.modal('show');
         }
     });
-    
+
+    quantityModal.on('shown.bs.modal', function () {
+        document.getElementById('newQuantity').focus();
+    });
+
     completeSaleButton.addEventListener('click', completionModal.modal.bind(completionModal, 'show'));
 
-    document.addEventListener('keydown', function(event) {
+    document.addEventListener('keydown',  function (event) {
         if (event.key === 'F8') {
             productsModal.modal('show');
         }
@@ -253,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (event.key === 'Enter' && completionModal.hasClass('show')) {
-            confirmSale();
+            debouncedConfirmSale();
         }
 
         if (event.key === 'Enter' && productsModal.hasClass('show')) {
@@ -261,23 +326,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    completionModal.on('hidden.bs.modal', function() {
+    completionModal.on('hidden.bs.modal', function () {
         productCodeInput.focus();
     });
-    
-    completionModal.on('shown.bs.modal', function() {
+
+    completionModal.on('shown.bs.modal', function () {
         amountReceived.focus();
         totalSale.value = cartTotal.innerText.replace('$', '');
     });
 
     addProductButton.addEventListener('click', addProductToCart);
 
-    detailsForm.addEventListener('submit', function(event) {
+    detailsForm.addEventListener('submit', function (event) {
         event.preventDefault();
         addProductToCart();
     });
 
-    amountReceived.addEventListener('input', function() {
+    amountReceived.addEventListener('input', function () {
         const amount = parseFloat(amountReceived.value);
         const total = parseFloat(cartTotal.innerText.replace('$', ''));
         const change = amount - total;
@@ -291,6 +356,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    confirmSaleButton.addEventListener('click', confirmSale);
-
+    confirmSaleButton.addEventListener('click', debouncedConfirmSale);
 });

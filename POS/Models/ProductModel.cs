@@ -19,4 +19,7 @@ public class ProductModel
     
     [BsonElement("stock")]
     public int Stock { get; set; }
+    
+    [BsonElement("status")]
+    public bool Status { get; set; }
 }

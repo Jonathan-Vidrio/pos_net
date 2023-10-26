@@ -15,7 +15,13 @@ public class ProductService
         _products = database.GetCollection<ProductModel>("products");
     }
 
-    public List<ProductModel> GetProducts()
+    public List<ProductModel> GetProductsEnabled()
+    {
+        // obtener los productos con status true
+        return _products.Find(product => product.Status == true).ToList();
+    }
+
+    public List<ProductModel> GetAllProducts()
     {
         return _products.Find(product => true).ToList();
     }
@@ -56,7 +62,7 @@ public class ProductService
         _products.ReplaceOne(product => product.Id == ObjectId.Parse(id), product);
     }
 
-    public void UpdateStock(List<SaleDetailModel> salesDetails)
+    public void SubstractStock(List<SaleDetailModel> salesDetails)
     {
         var codes = salesDetails.Select(s => s.Code);
         var products = GetProductsByCodes(codes);
@@ -66,6 +72,23 @@ public class ProductService
             product.Stock -= saleDetail.Quantity;
             UpdateProduct(product.Id.ToString(), product);
         }
+    }
+    
+    public void AddStock(List<SaleDetailModel> salesDetails)
+    {
+        var codes = salesDetails.Select(s => s.Code);
+        var products = GetProductsByCodes(codes);
+        foreach(var product in products)
+        {
+            var saleDetail = salesDetails.FirstOrDefault(s => s.Code == product.Code);
+            product.Stock += saleDetail.Quantity;
+            UpdateProduct(product.Id.ToString(), product);
+        }
+    }
+
+    public void DisableProduct(string id)
+    {
+        _products.UpdateOne(product => product.Id == ObjectId.Parse(id), Builders<ProductModel>.Update.Set(product => product.Status, false));
     }
     
     public void DeleteProduct(string id)

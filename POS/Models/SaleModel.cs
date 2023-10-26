@@ -28,5 +28,5 @@ public class SaleModel
     public List<SaleDetailModel> SaleDetails { get; set; }
     
     [BsonElement("status")]
-    public Boolean Status { get; set; }
+    public bool Status { get; set; }
 }

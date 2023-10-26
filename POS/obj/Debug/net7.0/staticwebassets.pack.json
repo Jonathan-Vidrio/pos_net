@@ -17,8 +17,8 @@
       "PackagePath": "staticwebassets/js/cancelSale.js"
     },
     {
-      "Id": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/js/newSale.js",
-      "PackagePath": "staticwebassets/js/newSale.js"
+      "Id": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/js/sale.js",
+      "PackagePath": "staticwebassets/js/sale.js"
     },
     {
       "Id": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/js/site.js",

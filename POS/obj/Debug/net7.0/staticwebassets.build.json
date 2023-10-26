@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "TDrKxnnxJnyu4jhupXFkXDE8wLZdIbG035dbIIn1Vvo=",
+  "Hash": "kfpgOKXmBtIZAkzKGO9qiwCDXhlB/sIkf3VIEpLaWXI=",
   "Source": "POS",
   "BasePath": "_content/POS",
   "Mode": "Default",
@@ -102,12 +102,12 @@
       "OriginalItemSpec": "wwwroot/js/cancelSale.js"
     },
     {
-      "Identity": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/js/newSale.js",
+      "Identity": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/js/sale.js",
       "SourceId": "POS",
       "SourceType": "Discovered",
       "ContentRoot": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/",
       "BasePath": "_content/POS",
-      "RelativePath": "js/newSale.js",
+      "RelativePath": "js/sale.js",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -116,7 +116,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/js/newSale.js"
+      "OriginalItemSpec": "wwwroot/js/sale.js"
     },
     {
       "Identity": "/home/semahr/RiderProjects/pos_net/POS/wwwroot/js/site.js",

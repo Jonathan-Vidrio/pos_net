@@ -114,7 +114,7 @@ public class SaleController : Controller
 
             if (!ModelState.IsValid) return BadRequest();
             _saleService.CreateSale(sale);
-            _productService.UpdateStock(sale.SaleDetails);
+            _productService.SubstractStock(sale.SaleDetails);
             return Ok();
         }
         catch (Exception ex)
