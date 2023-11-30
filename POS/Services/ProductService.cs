@@ -28,10 +28,9 @@ public class ProductService
     
     public List<ProductModel> SearchProducts(string term)
     {
-        var filter = Builders<ProductModel>.Filter.Or(
-            Builders<ProductModel>.Filter.Regex(p => p.Code, new BsonRegularExpression(term, "i")), 
-            Builders<ProductModel>.Filter.Regex(p => p.Description, new BsonRegularExpression(term, "i"))
-        );
+        var filter = (Builders<ProductModel>.Filter.Regex(product => product.Description, new BsonRegularExpression(term, "i")) 
+                     | Builders<ProductModel>.Filter.Regex(product => product.Code, new BsonRegularExpression(term, "i"))) 
+                     & Builders<ProductModel>.Filter.Eq(product => product.Status, true);
         return _products.Find(filter).ToList();
     }
 

@@ -31,7 +31,7 @@
             <tr>
                 <td>@product.Code</td>
                 <td>@product.Description</td>
-                <td>@product.Price</td>
+                <td>@product.Price.ToString("C")</td>
                 <td>@product.Stock</td>
                 <td>
                     <a asp-action="Edit" asp-controller="Product" asp-route-id="@product.Id" class="btn btn-primary m-1"> <!-- Añadido margen abajo -->
